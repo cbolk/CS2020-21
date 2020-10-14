@@ -1,6 +1,13 @@
 
 Write an algorithm that receives in input an integer value and outputs 1 if it is odd, 0 otherwise
 
+![Odd or even?](oddeven.png)
+
+version 2
+
+![Odd or even?](oddeven.v2.png)
+
+
 ---
 
 Write an algorithm that receives in input an integer value `num` and outputs all odd numbers strictly smaller than `num`
