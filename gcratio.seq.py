@@ -7,16 +7,18 @@ DNAELEM = ADENINE + CYTOSINE + GUANINE + THYMINE
 nDNAElem = len(DNAELEM)
 countElem = [0,0,0,0]
 
-sequence = input()
+sequence = raw_input()
 
 j = 0
+strOut = ""
 for i in DNAELEM:
-	countElem[j] = sequence.count(i)
-	print(str(countElem[j]), end=' ')
-	j = j + 1
+    countElem[j] = sequence.count(i)
+    strOut = strOut + str(sequence.count(i)) + " "
+    j = j + 1
 
 size = len(sequence)
-print(size)
+strOut = strOut + str(size)
+print(strOut)
 
 tot = sum(countElem)	
 
