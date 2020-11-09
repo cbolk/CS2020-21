@@ -1,36 +1,32 @@
 USED = '+'
 NOTUSED = ' '
-str1 = raw_input('')
-str2 = raw_input('')
+word1 = raw_input('')			# h o u s e
+word2 = raw_input('')			# s h o e s
 
-len1 = len(str1)
-len2 = len(str2)
-letter = []
-for i in str1:
+letter = []						#          
+len1 = 0
+for c in word1:
 	letter.append(NOTUSED)
+	len1 += 1
 
-if len1 != len2:
-	isAnag = False
-else:
-	
-
+len2 = len(word2)
+if len1 == len2:
 	isAnag = True
 	i = 0
 	while i < len1 and isAnag == True:
-		trovato = False
+		found = False
 		j = 0
-		while (j < len2) and (trovato == False):
-			if (str1[i] == str2[j]) and (letter[j] == NOTUSED):
+		while j < len2 and not found:
+			if (word1[i] == word2[j]) and (letter[j] == NOTUSED):
 				letter[j] = USED
-				trovato = True
+				found = True
 			else:
-				j = j + 1
-		if not trovato:
+				j += 1
+		if not found:
 			isAnag = False
-			#significa che il letter str1[i] non compare in str2
-			#oppure e' gia' stato usato
-			#quindi sappiamo che non e' un anagramma .. inutile continuare
 		else:
-			i = i + 1
+			i += 1
+else:
+	isAnag = False
 print isAnag
 
