@@ -104,13 +104,11 @@ fp = open(fileprob, "r")
 fs = open(filesol, "r")
 
 #prepare list of words
+#bear, beer, deer, 
 seqprob = fp.readline().strip()
 seqsol = fs.readline().strip()
 
-words = seqprob.split(",")
-wordsprob = []
-for word in words:
-    wordsprob.append(word.strip())
+wordsprob = seqprob.split(", ")
 
 words = seqsol.split(",")
 wordssol = []
@@ -125,12 +123,16 @@ if sameListOfWords(wordsprob, wordssol):
     numwords = len(wordssol)
     isValid = True
     while i < numwords-1 and isValid:
-#    print(wordssol[i], wordssol[i+1])
+        # alternative 1
         if not isAnagram(wordssol[i], wordssol[i+1]):
             if not wordsDifferByOneCharacter(wordssol[i], wordssol[i+1]):
                 if not wordsDifferByOneExtraCharacter(wordssol[i], wordssol[i+1]):
                     isValid = False
-                    break
+
+        # alternative 2
+        isValid = isAnagram(wordssol[i], wordssol[i+1]) || wordsDifferByOneCharacter(wordssol[i], wordssol[i+1]) /
+                    || wordsDifferByOneExtraCharacter(wordssol[i], wordssol[i+1]) 
+
         i += 1
 else:
     isValid = False
