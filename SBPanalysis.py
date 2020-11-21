@@ -23,6 +23,8 @@ df['Ranks'] = df['AbsDiff'].rank()
 df['R+'] = df['Ranks']*(df['Difference'] > 0)
 df['R-'] = df['Ranks']*(df['Difference'] < 0)
 
+boxplot = df.boxplot(by='AbsDiff', column=['SBP_before','SBP_after'])
+
 Wplus = sum(df['R+'])
 Wminus = sum(df['R-'])
 
