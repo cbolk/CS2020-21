@@ -70,9 +70,29 @@ while day < ndays:
 		ds.at[day*SAMPLEPERDAY + iv, 'filtered'] = avgday
 	day += 1
 
-ds['year'] = ds['ts'].dt.year
+
+dst['filtered'] = np.nan
+day = 0
+while day < ndays:
+	totday = 0.0
+	dec = 0
+	for iv in range(0, SAMPLEPERDAY):
+		t = dst.iloc[day*SAMPLEPERDAY + iv, 1]
+		if pd.isna(t):
+			dec += 1 #decrement the number of samples
+		else:
+			totday += t
+	avgday = totday/(SAMPLEPERDAY - dec)
+	for iv in range(0, SAMPLEPERDAY):
+		dst.at[day*SAMPLEPERDAY + iv, 'filtered'] = avgday
+	day += 1
+
+ds['day'] = ds['ts'].dt.day
+ds['month'] = ds['ts'].dt.month
+dst['dm'] = dst.ts.apply(lambda x: x.strftime('%d-%m')) 
 
 ds['filtered_bi'] = ds.iloc[:,1].rolling(window=SAMPLEPERDAY).mean()
+
 #ds['filtered_cum'] = ds.iloc[:,1].expanding(min_periods=SAMPLEPERDAY).mean()
 #ds['filtered_exp'] = ds.iloc[:,1].ewm(span=SAMPLEPERDAY,adjust=False).mean()
 
@@ -81,6 +101,6 @@ ds['filtered_bi'] = ds.iloc[:,1].rolling(window=SAMPLEPERDAY).mean()
 #sns.lineplot(x="ts", y="filtered_bi", data=ds)
 #sns.lineplot(x="ts", y="filtered_cum", data=ds)
 #sns.lineplot(x="ts", y="filtered_exp", data=ds)
-sns.lineplot(data=ds)
+sns.boxplot(x="DM", y="temperature", hue="month", data=dst)
 #plt.legend()
 plt.show()
