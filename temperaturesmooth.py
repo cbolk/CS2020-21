@@ -57,7 +57,7 @@ for i in range(0, nrows):
         ds.at[i,'temperature'] = rows.temperature.mean()
 
 
-#ds = ds.rename(index={0: "ts", 1: "temperature"})
+#ds = ds.rename(columns={0: "ts", 1: "temperature"})
 
 ds['filtered'] = np.nan
 day = 0
@@ -71,6 +71,7 @@ while day < ndays:
 	day += 1
 
 
+#if there are NaN, don't make mistakes
 dst['filtered'] = np.nan
 day = 0
 while day < ndays:
@@ -86,6 +87,14 @@ while day < ndays:
 	for iv in range(0, SAMPLEPERDAY):
 		dst.at[day*SAMPLEPERDAY + iv, 'filtered'] = avgday
 	day += 1
+
+#moving average on 24 samples
+dst['filtered_ma'] = np.nan
+for i in range(SAMPLEPERDAY, nrows):
+    rows = df.ix[i-SAMPLEPERDAY:i, ['temperature']]
+    ds.at[i,'filtered_ma'] = rows.temperature.mean()
+
+
 
 ds['day'] = ds['ts'].dt.day
 ds['month'] = ds['ts'].dt.month
