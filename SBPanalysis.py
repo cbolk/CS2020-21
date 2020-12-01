@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 TWOTAILED = 'TTT'
 ONETAILED = 'OTT'
@@ -24,6 +25,7 @@ df['R+'] = df['Ranks']*(df['Difference'] > 0)
 df['R-'] = df['Ranks']*(df['Difference'] < 0)
 
 boxplot = df.boxplot(by='AbsDiff', column=['SBP_before','SBP_after'])
+plt.show()
 
 Wplus = sum(df['R+'])
 Wminus = sum(df['R-'])
