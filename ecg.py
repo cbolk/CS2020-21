@@ -1,4 +1,8 @@
 import matplotlib.pyplot as plt
+import numpy as np
+
+FREQ = 360 #Hz	60 numbers in 1 second
+SECSINMIN = 60
 
 def findpeaks(x, mph):
 #	mph = 1.2
@@ -36,6 +40,7 @@ def findpeaks(x, mph):
 	#             peaks.remove(peaks[i])
 
 
+
 ## main process
 fname = input()	#raw_input()
 
@@ -48,6 +53,16 @@ try:
 	fin.close()
 	npoints = len(points)
 
+	maxtime = npoints / FREQ
+	#timeline
+	timelinesec = list(np.linspace(0, maxtime, npoints))
+#	print(timelinesec)
+	timeline = []
+	for t in timelinesec:
+		timeline.append(t/(FREQ))
+
+#	print(timeline)
+
 	minpeakheight = float(input())
 	allpeaks = findpeaks(points, minpeakheight)
 
@@ -56,10 +71,25 @@ try:
 	for i in allpeaks:
 		if points[i] >= 0.0:
 			peaklist.append(i)
-
-
-
 	npeaks = len(peaklist)
+
+	### tachogram
+	# distance between peaks
+	rri = [np.nan]
+
+	tot = 0.0
+	for i in peaklist:
+		tot += points[i]
+	avgpeak = tot / npeaks
+
+	scalefactor = (peaklist[1]-peaklist[0]) / avgpeak
+
+	i = 1
+	while(i < npeaks):
+		rri.append(abs(peaklist[i]-peaklist[i-1])/scalefactor)
+		i += 1
+
+#	print(rri)
 
 	#plot
 	_, ax = plt.subplots(1, 1, figsize=(8, 4))
@@ -69,14 +99,24 @@ try:
 	label = 'peak'
 	label = label + 's' if npeaks > 1 else label
 	#plot peaks
-	ax.plot(peaklist, [points[i] for i in peaklist], '+', mfc=None, mec='r', mew=2, ms=8,label='%d %s' % (npeaks, label))
+	ax.plot(peaklist, [points[i] for i in peaklist], '.', mfc=None, mec='r', mew=2, ms=8,label='%d %s' % (npeaks, label))
+	ax.plot(peaklist, rri, mfc=None, mec='r', mew=2, ms=8, label="RR interval", color="#e8a241")
 	ax.legend(loc='best', framealpha=.5, numpoints=1)
 	ax.set_xlim(-.02*npoints, npoints*1.02-1)
-	ymin, ymax = min(points), max(points)
-	yrange = ymax - ymin if ymax > ymin else 1
+	ymax = max(rri[1:])
+	if max(points) > ymax:
+		ymax = max(points)
+	ymin = min(points)
+	if ymax > ymin:
+		yrange = ymax - ymin
+	else:
+		yrange = 1
 	ax.set_ylim(ymin - 0.1*yrange, ymax + 0.1*yrange)
-	ax.set_xlabel('Data #', fontsize=14)
-	ax.set_ylabel('Amplitude', fontsize=14)
+	xlabels = ['{:,.2f}'.format(xl) for xl in ax.get_xticks()/FREQ]
+	ax.set_xticklabels(xlabels)
+	ax.set_xlabel('Time (sec)', fontsize=12)
+	ax.set_ylabel('Amplitude', fontsize=12)
+	plt.title("ECG")
 	plt.show()
 
 except FileNotFoundError:
