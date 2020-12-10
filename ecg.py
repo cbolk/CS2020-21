@@ -77,16 +77,9 @@ try:
 	# distance between peaks
 	rri = [np.nan]
 
-	tot = 0.0
-	for i in peaklist:
-		tot += points[i]
-	avgpeak = tot / npeaks
-
-	scalefactor = (peaklist[1]-peaklist[0]) / avgpeak
-
 	i = 1
 	while(i < npeaks):
-		rri.append(abs(peaklist[i]-peaklist[i-1])/scalefactor)
+		rri.append(abs(peaklist[i]-peaklist[i-1])/FREQ)
 		i += 1
 
 #	print(rri)

@@ -5,26 +5,43 @@ def findpeaks(x, mph):
 #	mingap = 0.2
 	nelem = len(x)
 	ndiff = nelem-1
-	diff = []
-	for i in range(0, ndiff):
-	    diff.append(float(x[i+1] - x[i]))
-	#print(x)
-	#print(diff)
-	rising = diff[:]
-	rising.insert(0,0)
-	decreasing = diff[:]
-	decreasing.append(0)
 
 	peaks = []
-	for i in range(0, nelem):
-	    if(rising[i] > 0 and decreasing[i] <= 0):   # = to keep first of a plateau
-	        peaks.append(i)
-	#print(peaks, len(peaks))
+	if mph is None:
+		i = 1
+		while i < ndiff:
+			if x[i] > x[i-1]:
+				if x[i] > x[i+1]:
+					peaks.append(i)
+				elif x[i] == x[i+1]:
+					lenplateau = 2
+					while x[i] == x[i+lenplateau]:
+						lenplateau += 1
+					if x[i] > x[i+lenplateau]:
+						peaks.append(i)
+					i = i + lenplateau - 1
+			i += 1
+	else:
+		i = 1
+		while i < ndiff:
+			if x[i] > mph and x[i] > x[i-1]:
+				if x[i] > x[i+1]:
+					peaks.append(i)
+				elif x[i] == x[i+1]:
+					lenplateau = 2
+					while x[i] == x[i+lenplateau]:
+						lenplateau += 1
+					if x[i] > x[i+lenplateau]:
+						peaks.append(i)
+					i = i + lenplateau - 1
+			i += 1
+
 	#peaks higher than minimumpeakheight mph
-	for p in reversed(peaks):
-	    if x[p] < mph:
-	        peaks.remove(p)
-	#print(peaks)
+#	if not mph is None: 
+#		for p in reversed(peaks):
+#			if x[p] < mph:
+#				peaks.remove(p)
+	print(peaks)
 	return peaks
 	#print(peaks, len(peaks))
 
@@ -37,25 +54,30 @@ def findpeaks(x, mph):
 
 
 ## main process
-fname = input()	#raw_input()
+fname = input() #raw_input()
 
 try:
-	fin = open(fname, "r")
-	x = fin.readlines()
-	points = []
-	for elem in x:
-		points.append(float(elem))
-	fin.close()
-	npoints = len(points)
+    fin = open(fname, "r")
+    x = fin.readlines()
+    points = []
+    for elem in x:
+        points.append(float(elem))
+    fin.close()
+    npoints = len(points)
 
-	minpeakheight = float(input())
-	allpeaks = findpeaks(points, minpeakheight)
+    try:
+        minpeakheight = float(input())
+    except ValueError:
+        minpeakheight = None
+
+    peaklist = findpeaks(points, minpeakheight)
+    print(peaklist)
 
 	# REMOVE NEGATIVE PEAKS
-	peaklist = []
-	for i in allpeaks:
-		if points[i] >= 0.0:
-			peaklist.append(i)
+	#peaklist = []
+	#for i in allpeaks:
+	#	if points[i] >= 0.0:
+	#		peaklist.append(i)
 
 
 
